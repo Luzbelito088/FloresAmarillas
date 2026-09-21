@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+<title>Flores Amarillas</title>
+
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    background:
+    radial-gradient(circle at top,
+    #18224f,
+    #0c122e 60%,
+    #050814);
+    font-family:sans-serif;
+    color:white;
+}
+
+/* ---------- ESTRELLAS ---------- */
+
+.star{
+    position:absolute;
+    border-radius:50%;
+    background:white;
+    animation:twinkle 3s infinite;
+}
+
+@keyframes twinkle{
+    0%,100%{opacity:.2}
+    50%{opacity:1}
+}
+
+/* ---------- MENSAJE INICIAL ---------- */
+
+#welcome{
+    position:absolute;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:20;
+    text-align:center;
+}
+
+#welcome h1{
+    font-size:clamp(2.5rem,6vw,5rem);
+    color:#ffe76a;
+}
+
+#welcome p{
+    margin-top:15px;
+    color:#fff5b8;
+}
+
+/* ---------- FLORES ---------- */
+
+.flower{
+    position:absolute;
+    width:42px;
+    height:42px;
+    z-index:30;
+    opacity:1;
+    pointer-events:none;
+    transition:
+    left 1.2s ease,
+    top 1.2s ease,
+    transform 1.2s ease,
+    opacity 1s ease;
+}
+
+.flower svg{
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+/* ---------- CARTA ---------- */
+
+#letterContainer{
+
+    position:absolute;
+    inset:0;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:100;
+
+    padding:40px;
+}
+
+#letter{
+
+    max-width:800px;
+
+    font-family:
+    "Special Elite",
+    monospace;
+
+    line-height:0.8;
+
+    font-size:2.15rem;
+
+    text-align:center;
+
+    color:white;
+
+    text-shadow:
+    0 0 12px rgba(255,255,255,.3);
+}
+
+.cursor{
+
+    animation:blink .8s infinite;
+}
+
+@keyframes blink{
+
+    50%{
+        opacity:0;
+    }
+}
+
+#giftBtn{
+    margin-top:40px;
+    display:none;
+    padding:15px 35px;
+    border:none;
+    border-radius:50px;
+    background:#ffd73a;
+    color:#222;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:1rem;
+}
+
+#giftBtn:hover{
+    transform:scale(1.05);
+}
+
+/* ---------- FINAL ---------- */
+
+#finalMessage{
+    position:absolute;
+    width:100%;
+    left:0;
+    bottom:40px;
+    text-align:center;
+    font-size:clamp(1.2rem,3vw,2rem);
+    opacity:0;
+    transition:2s;
+    z-index:200;
+    padding:20px;
+}
+
+</style>
+</head>
+<body>
+
+<audio id="music" loop>
+    <source src="music/SI LA GATA SE AMOTINAN.mp3" type="audio/mpeg">
+</audio>
+
+<div id="welcome">
+
+    <h1>🌻 Hola Vico 🌻</h1>
+
+    <p>
+        No sé si hoy recibiste flores, en el caso que no...
+    </p>
+
+</div>
+
+<div id="letterContainer">
+
+<div>
+
+<div id="letter"></div>
+
+<div style="text-align:center">
+
+<button id="giftBtn">
+
+🌻 PRESIONAME 🌻
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="finalMessage"></div>
+
+<script>
+
+/* =============================
+   ESTRELLAS
+============================= */
+
+for(let i=0;i<140;i++){
+
+    let star=document.createElement("div");
+
+    star.className="star";
+
+    let s=Math.random()*3+1;
+
+    star.style.width=s+"px";
+    star.style.height=s+"px";
+
+    star.style.left=Math.random()*100+"vw";
+    star.style.top=Math.random()*100+"vh";
+
+    star.style.animationDelay=Math.random()*3+"s";
+
+    document.body.appendChild(star);
+}
+
+/* =============================
+   SVG FLOR
+============================= */
+
+function flowerSVG(){
+
+return `<svg viewBox="0 0 100 100">
+<g>
+<ellipse cx="50" cy="20" rx="14" ry="24" fill="#ffd93d"/>
+<ellipse cx="80" cy="50" rx="14" ry="24" fill="#ffd93d"/>
+<ellipse cx="50" cy="80" rx="14" ry="24" fill="#ffd93d"/>
+<ellipse cx="20" cy="50" rx="14" ry="24" fill="#ffd93d"/>
+<ellipse cx="71" cy="29" rx="14" ry="24"
+transform="rotate(45 71 29)"
+fill="#ffd93d"/>
+<ellipse cx="71" cy="71" rx="14" ry="24"
+transform="rotate(-45 71 71)"
+fill="#ffd93d"/>
+<ellipse cx="29" cy="71" rx="14" ry="24"
+transform="rotate(45 29 71)"
+fill="#ffd93d"/>
+<ellipse cx="29" cy="29" rx="14" ry="24"
+transform="rotate(-45 29 29)"
+fill="#ffd93d"/>
+<circle cx="50" cy="50"
+r="15"
+fill="#8b5e00"/>
+</g>
+</svg>`.trim();
+}
+
+/* =============================
+   FLORES VOLANDO
+============================= */
+
+let flowers=[];
+
+function createFlower(){
+
+    const flower=document.createElement("div");
+
+    flower.className="flower";
+
+    flower.innerHTML=flowerSVG();
+
+    flower.style.left=
+    Math.random()*window.innerWidth+"px";
+
+    flower.style.top=
+    (window.innerHeight+50)+"px";
+
+    document.body.appendChild(flower);
+
+    flowers.push(flower);
+
+    animateFlower(flower);
+}
+
+function animateFlower(f){
+
+    const x= Math.random()*window.innerWidth;
+    const y= Math.random()*window.innerHeight*0.7;
+
+    f.style.transform="translate(0,0) rotate(0deg)";
+    f.style.left=x+"px";
+    f.style.top=y+"px";
+
+    f.animate([
+      {transform:"translateY(0px) rotate(0deg)"},
+      {transform:"translateY(-900px) rotate(360deg)"}
+    ],{
+      duration:6000+Math.random()*3000,
+      easing:"linear",
+      fill:"forwards"
+    });
+}
+
+let counter=0;
+
+const rain=setInterval(()=>{
+
+    for(let i=0;i<3;i++){
+
+        createFlower();
+
+        counter++;
+    }
+
+    if(counter>90){
+
+        clearInterval(rain);
+
+        setTimeout(showLetter,2500);
+    }
+
+},250);
+
+/* =============================
+   CARTA
+============================= */
+
+const text=`
+
+Dicen que el 21 de septiembre se regalan flores amarillas.
+Podría haberte comprado un ramo.
+Pero nosotros nos conocimos entre variables,
+errores de compilación,
+horas estudiando
+y líneas de código que no funcionaban así que... 🌻
+`;
+
+function showLetter(){
+
+document.getElementById("welcome")
+.style.opacity="0";
+
+const container=
+document.getElementById("letterContainer");
+
+container.style.display="flex";
+
+const box=
+document.getElementById("letter");
+
+let i=0;
+
+const machine=
+setInterval(()=>{
+
+box.innerHTML=
+text.substring(0,i)+
+"<span class='cursor'>|</span>";
+
+i++;
+
+if(i>text.length){
+
+clearInterval(machine);
+
+document
+.getElementById("giftBtn")
+.style.display="inline-block";
+
+}
+
+},35);
+
+}
+
+/* =============================
+   BOTÓN
+============================= */
+
+document
+.getElementById("giftBtn")
+.addEventListener("click",()=>{
+
+const music=
+document.getElementById("music");
+
+music.play().catch(()=>{});
+
+/* ocultar carta */
+
+document
+.getElementById("letterContainer")
+.style.display="none";
+
+/* formar ramo */
+
+const cx= window.innerWidth/2;
+
+const cy= window.innerHeight/2;
+
+flowers.forEach((flower, index)=>{
+
+    flower.getAnimations?.().forEach((anim)=>anim.cancel());
+
+    const angle = (index / flowers.length) * Math.PI * 2 + Math.random() * 0.8;
+    const radius = 28 + (index % 10) * 6 + Math.random() * 18;
+    const spreadX = Math.cos(angle) * radius;
+    const spreadY = Math.sin(angle) * radius;
+
+    flower.style.left = `${Math.max(20, Math.min(window.innerWidth - 60, cx + spreadX))}px`;
+    flower.style.top = `${Math.max(20, Math.min(window.innerHeight - 60, cy + spreadY))}px`;
+    flower.style.transform = `translate(0,0) scale(${0.9 + (index % 5) * 0.18 + Math.random() * 0.5}) rotate(${Math.random() * 360}deg)`;
+    flower.style.zIndex = "50";
+    flower.style.opacity = "1";
+
+});
+
+/* mensaje final */
+
+setTimeout(()=>{
+
+const final=
+document.getElementById("finalMessage");
+
+final.innerHTML=`
+... pensé que tal vez el regalo correcto
+era otro, en nuestro idioma.
+Por eso escribí este pequeño programa. 🌻
+`;
+
+final.style.opacity="1";
+
+},2500);
+
+});
+
+</script>
+
+</body>
+</html>
